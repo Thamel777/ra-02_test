@@ -24,6 +24,53 @@ This project contains a setup and testing guide for the **Ai-Thinker Ra-02 (SX12
 
 **Important Power Note:** The Ra-02 module can draw significant current, particularly during transmission. Place the six 10 µF capacitors in parallel across the 3.3V and GND rails on your breadboard to stabilize the power from the ESP32's 3.3V pin.
 
+### Wiring Diagram
+
+```mermaid
+graph LR
+    subgraph ESP32-U
+        3V3[3V3]
+        GND1[GND]
+        D5[GPIO 5]
+        D23[GPIO 23]
+        D19[GPIO 19]
+        D18[GPIO 18]
+        D14[GPIO 14]
+        D2[GPIO 2]
+    end
+
+    subgraph Breadboard Power
+        VCC_Rail[3.3V Rail]
+        GND_Rail[GND Rail]
+        CAP[6x 10µF Capacitors]
+        VCC_Rail ---|Parallel| CAP --- GND_Rail
+    end
+
+    subgraph Ra-02 LoRa Module
+        VCC2[Pin 3: 3.3V]
+        GND2[Pin: GND]
+        NSS[Pin 15: NSS]
+        MOSI[Pin 14: MOSI]
+        MISO[Pin 13: MISO]
+        SCK[Pin 12: SCK]
+        RST[Pin 4: RESET]
+        DIO0[Pin 5: DIO0]
+    end
+
+    3V3 ==>|Power| VCC_Rail
+    GND1 ==>|Ground| GND_Rail
+
+    VCC_Rail ==>|Power| VCC2
+    GND_Rail ==>|Ground| GND2
+
+    D5 -->|SPI CS| NSS
+    D23 -->|SPI MOSI| MOSI
+    D19 -->|SPI MISO| MISO
+    D18 -->|SPI SCK| SCK
+    D14 -->|Reset| RST
+    D2 -->|Interrupt| DIO0
+```
+
 ## Software Setup
 This project is built using **PlatformIO** in VS Code.
 
